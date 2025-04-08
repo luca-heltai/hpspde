@@ -1,5 +1,9 @@
 # High performance solution of partial differential equations
 
+|-|
+|Testing |
+|[![Continuous Integration](https://github.com/luca-heltai/hpspde/actions/workflows/gtest.yml/badge.svg "Continuous Integration")](https://github.com/luca-heltai/hpspde/actions/workflows/gtest.yml) |
+
 ## Abstract
 
 Partial differential equations (PDEs) are fundamental tools for modeling a wide range of scientific and engineering phenomena. This PhD course focuses on developing high-performance computational methods for solving real world PDEs.
