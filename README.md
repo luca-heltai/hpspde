@@ -1,8 +1,6 @@
 # High performance solution of partial differential equations
 
-|-|
-|Testing |
-|[![Continuous Integration](https://github.com/luca-heltai/hpspde/actions/workflows/gtest.yml/badge.svg "Continuous Integration")](https://github.com/luca-heltai/hpspde/actions/workflows/gtest.yml) |
+[![GitHub CI](https://github.com/luca-heltai/hpspde/actions/workflows/gtest.yaml/badge.svg)](https://github.com/luca-heltai/hpspde/actions/workflows/gtest.yaml)
 
 ## Abstract
 
