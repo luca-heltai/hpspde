@@ -3,4 +3,14 @@
 	"name": "deal.II developement container",
 	"image": "dealii/dealii:latest",
 	"remoteUser": "dealii",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"xaver.clang-format"
+			]
+		}
+	},
 }

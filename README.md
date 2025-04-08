@@ -27,3 +27,11 @@ Reference books:
 |------------|----------------------------------------------------------------------|
 | 2025-04-07 | Preliminary meeting for the course                                   |
 | 2025-04-08 | Crash course on to git, docker, github actions, continuous integration, and remove development with Visual Studio Code                               |
+
+# Course material
+
+- Git tutorial: <https://javedali99.github.io/git-tutorial/slides.html>
+- Docker tutorial: <https://www.docker.com/101-tutorial>
+- deal.II web page: <https://www.dealii.org/>
+- Remote container development with Visual Studio Code: <https://code.visualstudio.com/docs/remote/containers>
+- Continuous integration with GitHub actions: <https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions>
