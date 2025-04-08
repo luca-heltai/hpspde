@@ -20,3 +20,10 @@ Reference books:
 - Numerical Linear Algebra for High-Performance Computers, 1998, Jack J. Dongarra, Iain S. Duff, Danny C. Sorensen, Henk A. van der Vorst
 - Domain Decomposition Methods - Algorithms and Theory, 2005, Andrea Toselli, Olof B. Widlund
 - The Analysis of Multigrid Methods, 2000, James H. Bramble Xuejun Zhang
+
+# Schedule
+
+| Date       | Topic                                                                 |
+|------------|----------------------------------------------------------------------|
+| 2025-04-07 | Preliminary meeting for the course                                   |
+| 2025-04-08 | Crash course on to git, docker, github actions, continuous integration, and remove development with Visual Studio Code                               |

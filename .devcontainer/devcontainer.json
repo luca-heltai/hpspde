@@ -1,0 +1,6 @@
+// For format details, see https://aka.ms/devcontainer.json.
+{
+	"name": "deal.II developement container",
+	"image": "dealii/dealii:latest",
+	"remoteUser": "dealii",
+}
