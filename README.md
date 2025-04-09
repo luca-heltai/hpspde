@@ -28,7 +28,7 @@ Reference books:
 | Date       | Topic                                                                 |
 |------------|----------------------------------------------------------------------|
 | 2025-04-07 | Preliminary meeting for the course                                   |
-| 2025-04-08 | Crash course on to git, docker, github actions, continuous integration, and remove development with Visual Studio Code                               |
+| 2025-04-08 | Crash course on to git, docker, github actions, continuous integration, and remote development with Visual Studio Code                               |
 
 # Course material
 
