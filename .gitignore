@@ -1,2 +1,9 @@
 build
 .aider*
+output
+*.vtu
+*.pvd
+presentation
+availabilities
+.cache
+participants.md
