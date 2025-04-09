@@ -1,0 +1,20 @@
+subsection Convergence table
+  set Enable computation of the errors = true
+  set Error file name                  = ../output/01_smooth_interpolation-convergence.txt
+  set Error precision                  = 3
+  set Exponent for p-norms             = 2
+  set Extra columns                    = cells, dofs
+  set List of error norms to compute   = L2_norm, Linfty_norm, H1_norm
+  set Rate key                         = dofs
+  set Rate mode                        = reduction_rate_log2
+end
+subsection Interpolator parameters
+  set Exact solution expression = sin(2*pi*x)*sin(2*pi*y)
+  set Finite element degree     = 1
+  set Grid arguments            = 0 : 1 : false
+  set Grid name                 = hyper_cube
+  set Initial refinement        = 1
+  set Number of cycle           = 7
+  set Output directory          = ../output
+  set Output file name          = 01_smooth_interpolation
+end

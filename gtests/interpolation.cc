@@ -1,55 +1,29 @@
-#include <deal.II/base/function_lib.h>
-#include <deal.II/base/function_parser.h>
-#include <deal.II/base/point.h>
-#include <deal.II/base/quadrature_lib.h>
-
-#include <deal.II/dofs/dof_handler.h>
-#include <deal.II/dofs/dof_tools.h>
-
-#include <deal.II/fe/fe_q.h>
-#include <deal.II/fe/fe_system.h>
-
-#include <deal.II/grid/grid_generator.h>
-#include <deal.II/grid/tria.h>
-
-#include <deal.II/lac/vector.h>
-
-#include <deal.II/numerics/vector_tools.h>
-
 #include <gtest/gtest.h>
+
+#include "interpolator.h"
 
 
 using namespace dealii;
 
-TEST(Interpolation, CheckInterpolation)
+TEST(Interpolator, SmoothFunction)
 {
-  static const int   dim = 2;
-  Triangulation<dim> triangulation;
-
-  GridGenerator::hyper_cube(triangulation);
-  triangulation.refine_global(2);
-
-  FE_Q<dim> fe(1);
-
-  DoFHandler<dim> dof_handler(triangulation);
-  dof_handler.distribute_dofs(fe);
-
-  Vector<double> solution(dof_handler.n_dofs());
-
-  FunctionParser<dim>           fun;
-  std::map<std::string, double> constants;
-  fun.initialize("x,y", "sin(x*y)", constants);
-
-
-  VectorTools::interpolate(dof_handler, fun, solution);
-  Vector<double> cell_difference(triangulation.n_active_cells());
-  VectorTools::integrate_difference(dof_handler,
-                                    solution,
-                                    fun,
-                                    cell_difference,
-                                    QGauss<dim>(3),
-                                    VectorTools::L2_norm);
-  double L2_error = cell_difference.l2_norm();
-
-  EXPECT_LT(L2_error, 1e-1);
+  const std::string filename = SOURCE_DIR "/prms/01_smooth_interpolation.prm";
+  InterpolatorParameters<2> parameters(filename);
+  parameters.output_directory = SOURCE_DIR "/output";
+  Interpolator<2> interpolator(parameters);
+  interpolator.run();
+  // Check the output files
+  std::string output_file = parameters.output_directory + "/" +
+                            parameters.output_file_name + "-2d-cycle-0.vtu";
+  std::ifstream file(output_file);
+  ASSERT_TRUE(file.good()) << "Output file " << output_file
+                           << " does not exist or is not readable.";
+  file.close();
+  // Check the convergence table
+  std::string convergence_file = parameters.output_directory + "/" +
+                                 parameters.output_file_name +
+                                 "-convergence.txt";
+  std::ifstream conv_file(convergence_file);
+  ASSERT_TRUE(conv_file.good()) << "Convergence file " << convergence_file
+                                << " does not exist or is not readable.";
 }

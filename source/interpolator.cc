@@ -59,11 +59,6 @@ Interpolator<dim>::make_grid()
                                                   par.grid_name,
                                                   par.grid_arguments);
   triangulation.refine_global(par.initial_refinement);
-
-  std::cout << "   Number of active cells: " << triangulation.n_active_cells()
-            << std::endl
-            << "   Total number of cells: " << triangulation.n_cells()
-            << std::endl;
 }
 
 
@@ -72,9 +67,6 @@ void
 Interpolator<dim>::setup_system()
 {
   dof_handler.distribute_dofs(fe);
-
-  std::cout << "   Number of degrees of freedom: " << dof_handler.n_dofs()
-            << std::endl;
 
   solution.reinit(dof_handler.n_dofs());
 }
@@ -138,6 +130,7 @@ Interpolator<dim>::run()
       interpolate();
       output_results(cycle);
     }
+  par.convergence_table.output_table(std::cout);
 }
 
 template class Interpolator<1>;
