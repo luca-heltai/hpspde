@@ -14,7 +14,7 @@ subsection TestBench parameters
   set Finite element name       = FE_Q(1)
   set Grid arguments            = 0 : 1 : false
   set Grid name                 = hyper_cube
-  set Initial refinement        = 6
+  set Initial refinement        = 1
   set Output directory          = .
-  set Output file name          = two_level_fine
+  set Output file name          = solution
 end
