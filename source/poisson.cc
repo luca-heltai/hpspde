@@ -108,7 +108,7 @@ template <int dim>
 void
 Poisson<dim>::assemble_system()
 {
-  QGauss<dim> quadrature_formula(fe.degree + 1);
+  QGauss<dim> quadrature_formula(2*fe.degree + 1);
 
   FEValues<dim> fe_values(fe,
                           quadrature_formula,
@@ -158,6 +158,7 @@ Poisson<dim>::solve()
   SolverControl            solver_control(1000, 1e-12);
   SolverCG<Vector<double>> solver(solver_control);
   solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
+  constraints.distribute(solution);
 
   std::cout << "   " << solver_control.last_step()
             << " CG iterations needed to obtain convergence." << std::endl;
@@ -211,7 +212,7 @@ Poisson<dim>::run()
                                        solution,
                                        estimated_error_per_cell);
     
-          GridRefinement::refine_and_coarsen_fixed_fraction(triangulation,
+          GridRefinement::refine_and_coarsen_fixed_number(triangulation,
                                                       estimated_error_per_cell,
                                                       par.ref_frac, // Refinement fraction from parameter file
                                                      par.coarse_frac); // Coarsening fraction from parameter file
