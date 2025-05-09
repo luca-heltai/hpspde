@@ -37,3 +37,7 @@ Reference books:
 - deal.II web page: <https://www.dealii.org/>
 - Remote container development with Visual Studio Code: <https://code.visualstudio.com/docs/remote/containers>
 - Continuous integration with GitHub actions: <https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions>
+
+# Participants
+
+Stefano
