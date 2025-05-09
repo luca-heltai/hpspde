@@ -14,7 +14,7 @@ subsection Interpolator parameters
   set Grid arguments            = 0 : 1 : false
   set Grid name                 = hyper_cube
   set Initial refinement        = 1
-  set Number of cycle           = 7
+  set Number of cycle           = 5
   set Output directory          = ../output
   set Output file name          = 01_smooth_interpolation
 end

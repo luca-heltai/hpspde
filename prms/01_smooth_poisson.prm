@@ -1,0 +1,25 @@
+subsection Convergence table
+  set Enable computation of the errors = true
+  set Error file name                  = ../output/poisson_solution-convergence.txt
+  set Error precision                  = 3
+  set Exponent for p-norms             = 2
+  set Extra columns                    = cells, dofs
+  set List of error norms to compute   = L2_norm, Linfty_norm, H1_norm
+  set Rate key                         = dofs
+  set Rate mode                        = reduction_rate_log2
+end
+subsection Local refinement
+  set Coarsening fraction = 0.0
+  set Refinement fraction = 1.0
+end
+subsection Poisson parameters
+  set Exact solution expression  = cos(pi*x)*cos(pi*y)
+  set Finite element degree      = 1
+  set Grid arguments             = -1.0 : 1.0 : false
+  set Grid name                  = hyper_cube
+  set Initial refinement         = 3
+  set Number of cycles           = 4
+  set Output directory           = .
+  set Output file name           = poisson_solution
+  set Right hand side expression = 2*pi*pi*cos(pi*x)*cos(pi*y)
+end
