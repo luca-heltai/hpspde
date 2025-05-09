@@ -137,20 +137,23 @@ void
 TestBench<dim, spacedim>::output_results(const Vector<double> &output_field,
                                          const std::string    &suffix) const
 {
-  DataOutBase::VtkFlags vtk_flags;
-  vtk_flags.write_higher_order_cells = true;
   DataOut<dim, spacedim> data_out;
-  data_out.set_flags(vtk_flags);
+  if constexpr (dim > 1)
+    {
+      DataOutBase::VtkFlags vtk_flags;
+      vtk_flags.write_higher_order_cells = true;
+      data_out.set_flags(vtk_flags);
+    }
 
   data_out.attach_dof_handler(dof_handler);
   data_out.add_data_vector(output_field, "solution");
 
   data_out.build_patches();
   std::string fname =
-    par.output_file_name + (suffix == "" ? "" : "_" + suffix) + ".vtu";
+    par.output_file_name + (suffix == "" ? "" : "_" + suffix) + ".vtk";
 
-  std::ofstream vtuoutput(fname);
-  data_out.write_vtu(vtuoutput);
+  std::ofstream vtkoutput(fname);
+  data_out.write_vtk(vtkoutput);
 }
 
 
