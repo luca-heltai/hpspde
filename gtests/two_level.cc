@@ -25,7 +25,7 @@
 
 using namespace dealii;
 
-TEST(EigenValues, OutputEigenvalues)
+TEST(EigenValues, DavidePolverino)
 {
   const unsigned int       dim      = 2;
   const std::string        filename = SOURCE_DIR "/prms/01_eigenvalues.prm";
@@ -97,7 +97,9 @@ TEST(EigenValues, OutputEigenvalues)
       // Use ArpackSolver::Control to initialize the solver
       SolverControl control;
 
-      ArpackSolver solver(control);
+      ArpackSolver::AdditionalData additional_data(15, ArpackSolver::WhichEigenvalues::smallest_magnitude, true);
+
+      ArpackSolver solver(control, additional_data);
 
       solver.solve(stiffness_matrix,
                    mass_matrix,
