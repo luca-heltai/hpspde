@@ -25,6 +25,8 @@ TestBenchParameters<dim, spacedim>::TestBenchParameters(
     prm.add_parameter("Output file name", output_file_name);
     prm.add_parameter("Output directory", output_directory);
     prm.add_parameter("DoF renumbering", renumbering);
+    prm.add_parameter("omega", omega);
+    prm.add_parameter("Smoothing steps", smoothing_steps);
   }
   prm.leave_subsection();
 

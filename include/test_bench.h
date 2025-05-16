@@ -30,6 +30,8 @@ struct TestBenchParameters
 
   unsigned int initial_refinement        = 1;
   unsigned int n_cycles                  = 1;
+  double       omega                     = 1.0;
+  unsigned int smoothing_steps           = 10;
   std::string  fe_name                   = "FE_Q(1)";
   std::string  exact_solution_expression = "sin(2*pi*x)*sin(2*pi*y)";
   std::string  grid_name                 = "hyper_cube";

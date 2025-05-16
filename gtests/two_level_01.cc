@@ -112,17 +112,58 @@ TEST(EigenValues, Smoother)
                        Functions::ZeroFunction<dim>(
                          test_bench.fe->n_components()));
 
-  auto solution = test_bench.make_vector();
-  auto rhs      = test_bench.make_vector();
+  auto exact_solution = test_bench.make_vector();
+  auto rhs            = test_bench.make_vector();
 
   // Fill solution with random values
-  for (auto &value : solution)
-    value = Utilities::generate_normal_random_number(1.0, 0.5);
-  poisson.constraints.distribute(solution);
+  for (auto &value : exact_solution)
+    value = Utilities::generate_normal_random_number(1.0, 0.1);
+  poisson.constraints.distribute(exact_solution);
+
+  test_bench.output_results(exact_solution, "0");
 
   // Create a linear operator for A
-  auto A = linear_operator(poisson.stiffness_matrix);
-  auto M = linear_operator(poisson.mass_matrix);
+  auto A  = linear_operator(poisson.stiffness_matrix);
+  auto M  = linear_operator(poisson.mass_matrix);
+  auto Id = identity_operator(A);
+
+  rhs = A * exact_solution;
+
+  // Jacobi preconditioner
+
+
+  // Smoother definition
+  auto Pinv = parameters.omega * Id;
+
+  auto solution = test_bench.make_vector();
+  auto residual = test_bench.make_vector();
+  auto tmp      = test_bench.make_vector();
+
+  // x^n+1 = x^n + omega * (b-A x^n)
+  // e^n+1 = e^n - omega * A e^n
+
+  std::cout << "Solving with smoother parameter " << parameters.omega << " for "
+            << parameters.smoothing_steps << " steps." << std::endl;
+  solution = 0;
+  for (unsigned int i = 1; i < parameters.smoothing_steps; ++i)
+    {
+      // Start with the residual
+      residual = rhs - A * solution;
+
+      solution += Pinv * residual;
+
+      // poisson.constraints.distribute(solution);
+
+      tmp = solution;
+      tmp -= exact_solution;
+
+      // Output the solution
+      test_bench.output_results(solution, std::to_string(i));
+      std::cout << "Iteration " << i
+                << ": max residual = " << residual.l2_norm()
+                << ", error: " << tmp.l2_norm() << std::endl;
+    }
+
 
   // Fill rhs with the expected rhs:
 }
