@@ -49,7 +49,7 @@ PoissonParameters<dim>::PoissonParameters(const std::string &filename)
                           constants);
 }
 
-//Definitions for Poisson
+// Definitions for Poisson
 template <int dim>
 Poisson<dim>::Poisson(const PoissonParameters<dim> &par)
   : par(par)
@@ -62,8 +62,8 @@ void
 Poisson<dim>::make_grid()
 {
   GridGenerator::generate_from_name_and_arguments(triangulation,
-                                                      par.grid_name,
-                                                      par.grid_arguments);
+                                                  par.grid_name,
+                                                  par.grid_arguments);
   triangulation.refine_global(par.initial_refinement);
 
   std::cout << "   Number of active cells: " << triangulation.n_active_cells()
@@ -108,7 +108,7 @@ template <int dim>
 void
 Poisson<dim>::assemble_system()
 {
-  QGauss<dim> quadrature_formula(2*fe.degree + 1);
+  QGauss<dim> quadrature_formula(2 * fe.degree + 1);
 
   FEValues<dim> fe_values(fe,
                           quadrature_formula,
@@ -205,20 +205,22 @@ Poisson<dim>::run()
         make_grid();
       else
         {
-          Vector<float> estimated_error_per_cell(triangulation.n_active_cells());
+          Vector<float> estimated_error_per_cell(
+            triangulation.n_active_cells());
           KellyErrorEstimator<dim>::estimate(dof_handler,
-                                       QGauss<dim-1>(fe.degree + 1),
-                                       {},
-                                       solution,
-                                       estimated_error_per_cell);
-    
-          GridRefinement::refine_and_coarsen_fixed_number(triangulation,
-                                                      estimated_error_per_cell,
-                                                      par.ref_frac, // Refinement fraction from parameter file
-                                                     par.coarse_frac); // Coarsening fraction from parameter file
-    
-          triangulation.execute_coarsening_and_refinement();    
-          //triangulation.refine_global(1);
+                                             QGauss<dim - 1>(fe.degree + 1),
+                                             {},
+                                             solution,
+                                             estimated_error_per_cell);
+
+          GridRefinement::refine_and_coarsen_fixed_number(
+            triangulation,
+            estimated_error_per_cell,
+            par.ref_frac,     // Refinement fraction from parameter file
+            par.coarse_frac); // Coarsening fraction from parameter file
+
+          triangulation.execute_coarsening_and_refinement();
+          // triangulation.refine_global(1);
         }
       setup_system();
       assemble_system();
@@ -232,7 +234,7 @@ Poisson<dim>::run()
 }
 
 template class Poisson<1>;
-template class Poisson<2>; 
+template class Poisson<2>;
 template class Poisson<3>;
 template struct PoissonParameters<1>;
 template struct PoissonParameters<2>;

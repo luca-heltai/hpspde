@@ -34,6 +34,7 @@ struct TestBenchParameters
   unsigned int smoothing_steps           = 10;
   std::string  fe_name                   = "FE_Q(1)";
   std::string  exact_solution_expression = "sin(2*pi*x)*sin(2*pi*y)";
+  std::string  rhs_function_expression   = "2*pi*2*pi*sin(2*pi*x)*sin(2*pi*y)";
   std::string  grid_name                 = "hyper_cube";
   std::string  grid_arguments            = "0 : 1 : false";
   std::string  output_file_name          = "solution";
@@ -41,6 +42,7 @@ struct TestBenchParameters
   std::vector<std::string> renumbering;
 
   FunctionParser<spacedim>       exact_solution;
+  FunctionParser<spacedim>       rhs_function;
   mutable ParsedConvergenceTable convergence_table;
 
   ParameterHandler prm;

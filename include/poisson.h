@@ -6,8 +6,8 @@
 #include <deal.II/base/function_parser.h>
 #include <deal.II/base/logstream.h>
 #include <deal.II/base/parameter_handler.h>
-#include <deal.II/base/quadrature_lib.h>
 #include <deal.II/base/parsed_convergence_table.h>
+#include <deal.II/base/quadrature_lib.h>
 
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_tools.h>
@@ -16,12 +16,8 @@
 #include <deal.II/fe/fe_values.h>
 
 #include <deal.II/grid/grid_generator.h>
-#include <deal.II/grid/tria.h>
 #include <deal.II/grid/grid_refinement.h>
-
-#include <deal.II/numerics/data_out.h>
-#include <deal.II/numerics/matrix_tools.h>
-#include <deal.II/numerics/vector_tools.h>
+#include <deal.II/grid/tria.h>
 
 #include <deal.II/lac/affine_constraints.h>
 #include <deal.II/lac/dynamic_sparsity_pattern.h>
@@ -31,9 +27,13 @@
 #include <deal.II/lac/sparse_matrix.h>
 #include <deal.II/lac/vector.h>
 
-#include <string>
+#include <deal.II/numerics/data_out.h>
+#include <deal.II/numerics/matrix_tools.h>
+#include <deal.II/numerics/vector_tools.h>
+
 #include <fstream>
 #include <iostream>
+#include <string>
 
 using namespace dealii;
 
@@ -41,7 +41,7 @@ template <int dim>
 struct PoissonParameters
 {
   PoissonParameters(const std::string &filename = "poisson.prm");
-  
+
   unsigned int fe_degree                 = 1;
   unsigned int initial_refinement        = 3;
   unsigned int n_cycles                  = 1;
@@ -59,7 +59,7 @@ struct PoissonParameters
 
   ParameterHandler prm;
 
-  double ref_frac = 0.25; 
+  double ref_frac    = 0.25;
   double coarse_frac = 0.25;
 };
 
@@ -98,4 +98,4 @@ private:
   Vector<double> system_rhs;
 };
 
-#endif //POISSON_H
+#endif // POISSON_H
