@@ -451,3 +451,184 @@ TEST(TwoLevel, BasicTransfer)
   coarse_vector = Pt * fine_vector;
   coarse_bench.output_results(coarse_vector, "from_fine");
 }
+
+
+// TEST(TwoLevel, CoarseGridCorrection)
+// {
+//   const unsigned int dim = 2;
+
+//   // Create fine level TestBench
+//   const std::string fine_filename = SOURCE_DIR "/prms/two_level_fine.prm";
+//   TestBenchParameters<dim> fine_parameters(fine_filename);
+//   fine_parameters.output_directory = SOURCE_DIR "/output";
+//   TestBench<dim> fine_bench(fine_parameters);
+//   fine_bench.initialize();
+
+//   // Create coarse level TestBench
+//   const std::string coarse_filename = SOURCE_DIR
+//   "/prms/two_level_coarse.prm"; TestBenchParameters<dim>
+//   coarse_parameters(coarse_filename); coarse_parameters.output_directory =
+//   SOURCE_DIR "/output"; TestBench<dim> coarse_bench(coarse_parameters);
+//   coarse_bench.initialize();
+
+//   // Map dofs to support points for fine and coarse levels
+//   const auto             &mapping = StaticMappingQ1<dim>::mapping;
+//   std::vector<Point<dim>>
+//   fine_support_points(fine_bench.dof_handler.n_dofs());
+
+//   DoFTools::map_dofs_to_support_points(mapping,
+//                                        fine_bench.dof_handler,
+//                                        fine_support_points);
+
+//   ASSERT_EQ(fine_support_points.size(), fine_bench.dof_handler.n_dofs());
+
+//   std::vector<Point<dim>> coarse_support_points(
+//     coarse_bench.dof_handler.n_dofs());
+//   DoFTools::map_dofs_to_support_points(mapping,
+//                                        coarse_bench.dof_handler,
+//                                        coarse_support_points);
+//   ASSERT_EQ(coarse_support_points.size(), coarse_bench.dof_handler.n_dofs());
+
+//   SparsityPattern      sparsity_pattern;
+//   SparseMatrix<double> restriction_matrix;
+
+//   GridTools::Cache<dim, dim> coarse_cache(coarse_bench.triangulation,
+//   mapping);
+
+//   const auto [cells, qpoints, indices] =
+//     GridTools::compute_point_locations(coarse_cache, fine_support_points);
+
+//   DynamicSparsityPattern dsp(coarse_bench.dof_handler.n_dofs(),
+//                              fine_bench.dof_handler.n_dofs());
+
+//   std::vector<types::global_dof_index> coarse_dof_indices(
+//     coarse_bench.fe->dofs_per_cell);
+
+//   for (unsigned int i = 0; i < cells.size(); ++i)
+//     {
+//       const auto &cell  = cells[i];
+//       const auto &index = indices[i];
+//       const auto  dof_cell =
+//         cell->as_dof_handler_iterator(coarse_bench.dof_handler);
+//       dof_cell->get_dof_indices(coarse_dof_indices);
+
+//       for (const auto i : coarse_dof_indices)
+//         for (const auto j : index)
+//           {
+//             // Add a connection from the fine dof to the coarse dof
+//             dsp.add(i, j);
+//           }
+//     }
+//   sparsity_pattern.copy_from(dsp);
+//   restriction_matrix.reinit(sparsity_pattern);
+
+//   const auto               &fe = coarse_bench.fe;
+//   AffineConstraints<double> constraints;
+//   constraints.close();
+
+//   for (unsigned int i = 0; i < cells.size(); ++i)
+//     {
+//       const auto &cell   = cells[i];
+//       const auto &qpoint = qpoints[i];
+//       const auto &index  = indices[i];
+//       const auto  dof_cell =
+//         cell->as_dof_handler_iterator(coarse_bench.dof_handler);
+//       dof_cell->get_dof_indices(coarse_dof_indices);
+
+//       FullMatrix<double> local_interpolation_matrix(fe->dofs_per_cell,
+//                                                     index.size());
+
+//       for (unsigned int i = 0; i < fe->dofs_per_cell; ++i)
+//         for (unsigned int j = 0; j < index.size(); ++j)
+//           {
+//             local_interpolation_matrix(i, j) = fe->shape_value(i, qpoint[j]);
+//           }
+//       constraints.distribute_local_to_global(local_interpolation_matrix,
+//                                              coarse_dof_indices,
+//                                              index,
+//                                              restriction_matrix);
+//     }
+
+//   Vector<double> fine_vector(fine_bench.dof_handler.n_dofs());
+//   Vector<double> coarse_vector(coarse_bench.dof_handler.n_dofs());
+
+//   // Interpolate on the fine level, and restrict to the coarse level
+//   VectorTools::interpolate(coarse_bench.dof_handler,
+//                            coarse_bench.par.exact_solution,
+//                            coarse_vector);
+
+//   restriction_matrix.Tvmult(fine_vector, coarse_vector);
+//   fine_bench.output_results(fine_vector, "");
+//   coarse_bench.output_results(coarse_vector, "");
+
+//   auto Pt = linear_operator(restriction_matrix);
+//   auto P  = transpose_operator(Pt);
+
+
+
+//   Poisson<dim> fine_poisson(fine_bench.dof_handler,
+//                             Functions::ZeroFunction<dim>(
+//                               fine_bench.fe->n_components()));
+
+//   Poisson<dim> coarse_poisson(coarse_bench.dof_handler,
+//                               Functions::ZeroFunction<dim>(
+//                                 coarse_bench.fe->n_components()));
+
+//   auto exact_solution = fine_bench.make_vector();
+//   auto rhs            = fine_bench.make_vector();
+
+//   // Fill solution with random values
+//   for (auto &value : exact_solution)
+//     value = Utilities::generate_normal_random_number(1.0, 0.1);
+//   fine_poisson.constraints.distribute(exact_solution);
+
+//   fine_bench.output_results(exact_solution, "0");
+
+//   // Create a linear operator for A
+//   auto A  = linear_operator(fine_poisson.stiffness_matrix);
+//   auto M  = linear_operator(fine_poisson.mass_matrix);
+//   auto Id = identity_operator(A);
+
+//   auto A_coarse  = linear_operator(coarse_poisson.stiffness_matrix);
+//   auto M_coarse  = linear_operator(coarse_poisson.mass_matrix);
+//   auto Id_coarse = identity_operator(A_coarse);
+
+//   rhs = A * exact_solution;
+
+//   // Jacobi preconditioner
+//   PreconditionJacobi<SparseMatrix<double>> preconditioner;
+//   preconditioner.initialize(fine_poisson.stiffness_matrix);
+//   auto J = linear_operator(A, preconditioner);
+
+//   auto coarse_solver =
+//     linear_operator(A_coarse, coarse_poisson.stiffness_inverse);
+
+//   // Now create a coarse grid correction operator
+//   auto coarse_grid_correction = P * coarse_solver * Pt;
+
+//   // Test CG solver without preconditioner
+//   SolverControl solver_control(fine_bench.dof_handler.n_dofs(), 1e-12, 1000);
+//   SolverCG<Vector<double>> cg_solver(solver_control);
+
+//   cg_solver.solve(A, fine_vector, rhs, PreconditionIdentity());
+//   fine_poisson.constraints.distribute(fine_vector);
+//   fine_bench.output_results(fine_vector, "cg_solution");
+
+//   // Output the number of iterations
+//   std::cout << "Unpreconditioned CG solver iterations: "
+//             << solver_control.last_step() << std::endl;
+
+//   // Now apply the coarse grid correction once
+//   coarse_grid_correction.vmult(fine_vector, rhs);
+//   fine_poisson.constraints.distribute(fine_vector);
+//   fine_bench.output_results(fine_vector, "preconditioner");
+
+//   // Now apply the preconditioner with the CG solver
+//   cg_solver.solve(A, fine_vector, rhs, coarse_grid_correction);
+//   fine_poisson.constraints.distribute(fine_vector);
+//   fine_bench.output_results(fine_vector, "cg_solution_with_preconditioner");
+
+//   // Output the number of iterations
+//   std::cout << "Preconditioned CG solver iterations: "
+//             << solver_control.last_step() << std::endl;
+// }

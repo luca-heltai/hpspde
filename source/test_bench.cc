@@ -20,6 +20,7 @@ TestBenchParameters<dim, spacedim>::TestBenchParameters(
     prm.add_parameter("Finite element name", fe_name);
     prm.add_parameter("Initial refinement", initial_refinement);
     prm.add_parameter("Exact solution expression", exact_solution_expression);
+    prm.add_parameter("RHS function expression", rhs_function_expression);
     prm.add_parameter("Grid name", grid_name);
     prm.add_parameter("Grid arguments", grid_arguments);
     prm.add_parameter("Output file name", output_file_name);
@@ -48,7 +49,11 @@ TestBenchParameters<dim, spacedim>::TestBenchParameters(
   exact_solution.initialize(FunctionParser<dim>::default_variable_names(),
                             {exact_solution_expression},
                             constants);
+  rhs_function.initialize(FunctionParser<dim>::default_variable_names(),
+                          {rhs_function_expression},
+                          constants);
 }
+
 
 // Definitions for TestBench
 template <int dim, int spacedim>
@@ -87,6 +92,8 @@ TestBench<dim, spacedim>::setup_system()
         DoFRenumbering::block_wise(dof_handler);
       else if (renumber == "hierarchical")
         DoFRenumbering::hierarchical(dof_handler);
+      else if (renumber == "subdomain")
+        DoFRenumbering::subdomain_wise(dof_handler);
       else if (renumber == "lexicographic")
         {
           if constexpr (dim > 1 && dim == spacedim)
